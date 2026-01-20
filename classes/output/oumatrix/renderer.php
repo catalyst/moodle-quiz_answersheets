@@ -31,7 +31,13 @@ use question_state;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/question/type/oumatrix/renderer.php');
+// Work-around when the class does not exist.
+if (class_exists('\qtype_oumatrix_single_renderer')) {
+    class_alias('\qtype_oumatrix_single_renderer', '\qtype_oumatrix_single_renderer_alias');
+    require_once($CFG->dirroot . '/question/type/oumatrix/renderer.php');
+} else {
+    class_alias('\qtype_renderer', '\qtype_oumatrix_single_renderer_alias');
+}
 
 /**
  * The override qtype_oumatrix_renderer for the quiz_answersheets module.
@@ -39,7 +45,7 @@ require_once($CFG->dirroot . '/question/type/oumatrix/renderer.php');
  * @copyright  2023 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class qtype_oumatrix_override_renderer extends \qtype_oumatrix_single_renderer {
+class qtype_oumatrix_override_renderer extends \qtype_oumatrix_single_renderer_alias {
 
     /**
      * The code was copied from question/type/oumatrix/renderer.php, with modifications.
